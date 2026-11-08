@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post Problem - SolveX</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}?v={% now 'U' %}">
+</head>
+<body class="auth-page-body">
+
+  <header class="navbar">
+    <div class="logo">SolveX</div>
+    <nav>
+      <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        {% if user.is_authenticated %}
+          <li>
+            <a href="{% url 'notifications' %}">
+              Notifications{% if unread_notifications_count %} ({{ unread_notifications_count }}){% endif %}
+            </a>
+          </li>
+        {% endif %}
+        <li><a href="{% url 'browse_problems' %}">Browse Problems</a></li>
+        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'logout' %}" class="login-btn">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="auth-container">
+    <div class="auth-form-wrapper">
+      <h1 style="text-align:center; margin-bottom:8px;">Post a New Problem</h1>
+      <p style="text-align:center; color:#666; margin-top:0;">Fill details and publish your problem.</p>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" action="{% url 'post_problem' %}">
+        {% csrf_token %}
+
+        <label style="font-weight:700;">Title</label>
+        <input
+          type="text"
+          name="title"
+          required
+          placeholder="Problem title"
+          style="width:100%; padding:12px; margin:8px 0 16px 0; border:1px solid #ddd; border-radius:6px;"
+        >
+
+        <label style="font-weight:700;">Description</label>
+        <textarea
+          name="description"
+          rows="6"
+          required
+          placeholder="Explain the problem..."
+          style="width:100%; padding:12px; margin:8px 0 16px 0; border:1px solid #ddd; border-radius:6px; resize:vertical;"
+        ></textarea>
+
+        <label style="font-weight:700;">Budget (BTD)</label>
+        <input
+          type="number"
+          step="0.01"
+          name="budget"
+          required
+          placeholder="e.g. 50"
+          style="width:100%; padding:12px; margin:8px 0 18px 0; border:1px solid #ddd; border-radius:6px;"
+        >
+
+        <button
+          type="submit"
+          style="width:100%; padding:14px; background:#f59e0b; border:none; border-radius:8px; font-weight:800; font-size:16px; cursor:pointer;"
+        >
+          Post
+        </button>
+      </form>
+    </div>
+  </main>
+
+</body>
+</html>
